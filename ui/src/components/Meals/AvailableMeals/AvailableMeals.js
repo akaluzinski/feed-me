@@ -1,5 +1,5 @@
 import { DUMMY_MEALS } from "../../../fixtures/dummy-meals";
-import Card from "../../Card/Card";
+import Card from "../../shared/Card/Card";
 import classes from "./AvailableMeals.module.css";
 import MealItem from "./MealItem/MealItem";
 
