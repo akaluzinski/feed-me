@@ -8,7 +8,7 @@ const portalOverlaysElement = document.getElementById("overlays");
 const Modal = (props) => {
   return (
     <>
-      {ReactDOM.createPortal(<Backdrop />, portalOverlaysElement)}
+      {ReactDOM.createPortal(<Backdrop onHide={props.onHide}/>, portalOverlaysElement)}
       {ReactDOM.createPortal(
         <ModalOverlay>{props.children}</ModalOverlay>,
         portalOverlaysElement
