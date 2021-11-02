@@ -1,13 +1,34 @@
-import { DUMMY_MEALS } from "../../../fixtures/dummy-meals";
 import Card from "../../shared/Card/Card";
 import classes from "./AvailableMeals.module.css";
 import MealItem from "./MealItem/MealItem";
-import { Component} from 'react'
-  
-class AvailableMeals extends Component {
+import { useEffect, useState } from "react";
 
-  render() {
-    const meals = DUMMY_MEALS.map((meal) => (
+const AvailableMeals = () => {
+
+    const [meals, setMeals] = useState([])
+
+    useEffect(() => {
+      const fetchMeals = async () => {
+        const response = await fetch(testURL);
+        console.log(response);
+        const data = await response.json();
+        const loadedMeals = [];
+
+        for (const key in data) {
+          loadedMeals.push({
+            id: key,
+            name: data[key].name,
+            price: data[key].price
+          })
+        }
+
+        setMeals(loadedMeals);
+      };
+
+      fetchMeals();
+    }, []);
+
+    const mealsList = meals.map((meal) => (
       <MealItem
         id={meal.id}
         key={meal.id}
@@ -16,37 +37,14 @@ class AvailableMeals extends Component {
         description={meal.description}
       />
     ));
-  
+
     return (
       <section className={classes.meals}>
         <Card>
-          <ul>{meals}</ul>
+          <ul>{mealsList}</ul>
         </Card>
       </section>
     );
   }
 
-}
-
-/*
-const AvailableMeals = () => {
-  const meals = DUMMY_MEALS.map((meal) => (
-    <MealItem
-      id={meal.id}
-      key={meal.id}
-      name={meal.name}
-      price={meal.price}
-      description={meal.description}
-    />
-  ));
-
-  return (
-    <section className={classes.meals}>
-      <Card>
-        <ul>{meals}</ul>
-      </Card>
-    </section>
-  );
-};
-*/
 export default AvailableMeals;
