@@ -2,6 +2,7 @@ import Card from "../../shared/Card/Card";
 import classes from "./AvailableMeals.module.css";
 import MealItem from "./MealItem/MealItem";
 import { useEffect, useState } from "react";
+import { testURL } from '../../../fixtures/test-data';
 
 const AvailableMeals = () => {
 
@@ -12,6 +13,12 @@ const AvailableMeals = () => {
         const response = await fetch(testURL);
         console.log(response);
         const data = await response.json();
+
+        if(data?.error === 'Permission denied') {
+          console.error('Permission denied. Verify DB connection');
+          return;
+        }
+
         const loadedMeals = [];
 
         for (const key in data) {
