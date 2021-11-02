@@ -7,7 +7,7 @@ import { testURL } from "../../../fixtures/test-data";
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -15,8 +15,8 @@ const AvailableMeals = () => {
       console.log(response);
       const data = await response.json();
 
-      if (data?.error === "Permission denied") {
-        setIsError(true);
+      if (!response.ok) {
+        setError(response?.statusText || 'Unknown error');
         setIsLoading(false);
         return;
       }
@@ -38,11 +38,11 @@ const AvailableMeals = () => {
     fetchMeals();
   }, []);
 
-  if (isError || isLoading) {
+  if (error || isLoading) {
     return (
       <section className={classes.mealIsLoading}>
         { isLoading && <p>Loading...</p> }
-        { isError && <p>Error :(</p> }
+        { error && <p>{error}</p> }
       </section>
     );
   }
