@@ -8,6 +8,8 @@ import { testURL } from "../../fixtures/test-data";
 
 const Cart = (props) => {
   const [isCheckout, setIsCheckout] = useState(false);
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
 
   const cartCtx = useContext(CartContext);
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
@@ -39,14 +41,18 @@ const Cart = (props) => {
     setIsCheckout(true);
   };
 
-  const submitOrderHandler = (userData) => {
-    fetch(testURL + "/orders.json", {
+  const submitOrderHandler = async (userData) => {
+    setIsSubmiting(true);
+    await fetch(testURL + "/orders.json", {
       method: "POST",
       body: JSON.stringify({
         user: userData,
         ordererdItems: cartCtx.items,
       }),
     });
+    setIsSubmiting(false);
+    setDidSubmit(true);
+    cartCtx.clearCart();
   };
 
   const modalActions = (
@@ -62,8 +68,8 @@ const Cart = (props) => {
     </div>
   );
 
-  return (
-    <Modal onHide={props.onHide}>
+  const cartModalContent = (
+    <>
       {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
@@ -75,7 +81,18 @@ const Cart = (props) => {
           onCancel={props.onHide}
         ></Checkout>
       )}
-      {!isCheckout && modalActions}
+      {!isCheckout && modalActions}{" "}
+    </>
+  );
+
+  const isSubmitingModalContent = <p>Sending order</p>;
+  const didSubmitModalContent = <p>Ordered! :)</p>;
+
+  return (
+    <Modal onHide={props.onHide}>
+      {!isSubmiting && !didSubmit && cartModalContent}
+      {isSubmiting && isSubmitingModalContent}
+      {!isSubmiting && didSubmit && didSubmitModalContent}
     </Modal>
   );
 };
