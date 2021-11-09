@@ -11,12 +11,12 @@ const AvailableMeals = () => {
 
   useEffect(() => {
     const fetchMeals = async () => {
-      const response = await fetch(testURL);
+      const response = await fetch(testURL + "/meals.json");
       console.log(response);
       const data = await response.json();
 
       if (!response.ok) {
-        setError(response?.statusText || 'Unknown error');
+        setError(response?.statusText || "Unknown error");
         setIsLoading(false);
         return;
       }
@@ -41,8 +41,8 @@ const AvailableMeals = () => {
   if (error || isLoading) {
     return (
       <section className={classes.mealIsLoading}>
-        { isLoading && <p>Loading...</p> }
-        { error && <p>{error}</p> }
+        {isLoading && <p>Loading...</p>}
+        {error && <p>{error}</p>}
       </section>
     );
   }

@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import CartContext from "../../store/cart-context";
 import CartItem from "./CartItem";
 import Checkout from "./Checkout";
+import { testURL } from "../../fixtures/test-data";
 
 const Cart = (props) => {
   const [isCheckout, setIsCheckout] = useState(false);
@@ -38,6 +39,16 @@ const Cart = (props) => {
     setIsCheckout(true);
   };
 
+  const submitOrderHandler = (userData) => {
+    fetch(testURL + "/orders.json", {
+      method: "POST",
+      body: JSON.stringify({
+        user: userData,
+        ordererdItems: cartCtx.items,
+      }),
+    });
+  };
+
   const modalActions = (
     <div className={classes.actions}>
       <button className={classes["button-alt"]} onClick={props.onHide}>
@@ -58,7 +69,12 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {isCheckout && <Checkout onCancel={props.onHide}></Checkout>}
+      {isCheckout && (
+        <Checkout
+          onConfirm={submitOrderHandler}
+          onCancel={props.onHide}
+        ></Checkout>
+      )}
       {!isCheckout && modalActions}
     </Modal>
   );
